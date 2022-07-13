@@ -1,22 +1,20 @@
 # Site settings
-title: Your Blog
+title: GSOC22 Project
 SEOTitle: 你的博客 | Your Blog
 header-img: img/home-bg.jpg
 email: huxpro@gmail.com
 description: ""
 keyword: ""
 url: "https://kkie02.github.io/GSOC22.github.io/"              # your host, for absolute URL
-#baseurl: "/huxblog-boilerplate"         # for example, '/blog' if your blog hosted on 'host/blog'
+# baseurl: "/huxblog-boilerplate"         # for example, '/blog' if your blog hosted on 'host/blog'
 
 
 
 # SNS settings
 RSS: false
-weibo_username:     huxpro
-zhihu_username:     huxpro
-github_username:    huxpro
-#twitter_username:  huxpro
-facebook_username:  huxpro
+
+github_username:    kkie02
+
 
 
 
