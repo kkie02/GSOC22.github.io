@@ -1,8 +1,9 @@
 # Site settings
-title: GSOC22 Project
-SEOTitle: 你的博客 | Your Blog
+title: Qing's Blog
+#SEOTitle: 你的博客 | Your Blog
+SEOTitle: Qing Blog
 header-img: img/home-bg.jpg
-email: huxpro@gmail.com
+email: gitkomo@protonmail.com
 description: ""
 keyword: ""
 url: "https://kkie02.github.io/GSOC22.github.io/"              # your host, for absolute URL
@@ -48,26 +49,26 @@ kramdown:
 #disqus_username: _your_disqus_short_name_
 
 # Duoshuo settings
-duoshuo_username: huxblog
+#duoshuo_username: huxblog
 # Share component is depend on Comment so we can NOT use share only.
-duoshuo_share: true                     # set to false if you want to use Comment without Sharing
+#duoshuo_share: true                     # set to false if you want to use Comment without Sharing
 
 
 
 
 # Analytics settings
 # Baidu Analytics
-ba_track_id: 4cc1f2d8f3067386cc5cdb626a202900
+#ba_track_id: 4cc1f2d8f3067386cc5cdb626a202900
 # Google Analytics
-ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
-ga_domain: huangxuan.me
+#ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
+#ga_domain: huangxuan.me
 
 
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "写写代码，做做设计，看看产品。世界那么大，多玩玩看看。"
-sidebar-avatar: /img/avatar-hux.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-about-description: "Record some projects"
+sidebar-avatar: /img/background2.png      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
@@ -82,17 +83,5 @@ friends: [
     {
         title: "Hux Blog",
         href: "http://huangxuan.me"
-    },{
-        title: "Foo",
-        href: "#"
-    },{
-        title: "Bar",
-        href: "#"
-    },{
-        title: "Example Friends",
-        href: "#"
-    },{
-        title: "It helps SEO",
-        href: "#"
     }
 ]
