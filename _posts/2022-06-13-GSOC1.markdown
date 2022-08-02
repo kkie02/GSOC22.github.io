@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "Spelling Checker 1: Demand Analysis"
-#subtitle:   ""
+title:      "Spell Checker 1: Demand Analysis"
+subtitle:   "An brief overview about spell checker"
 date:       2022-06-21
 author:     "Hux"
 header-img: "img/gsoc_logo.jpg"
@@ -10,30 +10,21 @@ tags:
     - Spelling Checker
 ---
 
-> This page describe the keypoint of spell checker implemented in the project.
+
 
 ## Catagory
 
-1. [Unix](#unix)
-	1. [Bell Labs](#bell-labs)
-	2. [Xenix](#xenix)
-	3. [BSD](#bsd)
-	4. [FreeBSD & Apple](#freebsd--apple)
-	5. [NeXTStep](#nextstep)
-	6. [Darwin](#darwin)
-	7. [POSIX](#posix)
-2. [Unix-like](#unix-like)
-	1. [Single Unix Specification](#single-unix-specification)
-	2. [Apple iOS](#apple-ios)
-	3. [XNU Kernel](#xnu-kernel)
-3. [Linux](#linux)
-	1. [Linux Kernel](#linux-kernel)
-	2. [GNU Project](#gnu-project)
-	3. [Android](#android)
-	4. [Android Kernel](#android-kernel)
-	5. [Android ROM](#android-rom)
-	6. [Chrome OS](#chrome-os)
-	7. [Chromium OS](#chromium-os)
+> This page describe the keypoint of spell checker implemented in the project.
+
+1. [Background](#background)
+2. [Problem Analysis](#problem-analysis)
+	1. [Wrong Predictions](#wrong-predictions)
+	2. [Mismarked English Words](#mismarked-english-words)
+	3. [Special Entities](#special-entities)
+3. [Solution](#solution)
+	1. [Wrong Predictions](#wrong-predictions)
+	2. [Mismarked English Words](#mismarked-english-words)
+	3. [Special Entities](#special-entities)
 
 ---
 
@@ -53,6 +44,7 @@ Hunspell is a spell checker designed for languages with polymorphic and complex 
 Red Hen Lab uses Hunspell to process both English and Spanish files. Hunspell performs good for English files, but there are many problems by processing Spanish files.
 
 Here are some errors in one Spanish file found by Hunspell:
+
 ```js
 TVE
 Decirlo
@@ -74,15 +66,17 @@ recapitalizar
 
 
 Most of the words in the list above are marked incorrectly. The problems can be separated into 4 types:
-1.**Wrong Predictions**
+
+- #### Wrong Predictions
+
 This is the biggest problem that Red Hen Lab meets now. Some right Spanish word, like "Decirlo", "recapitalizar" are right expression in Spanish. "Decirlo" consists of two sub-words: "Decir" and "lo", and "recapitalizar" is the combination of "re" and "capitalizar". It's obvious that Hunspell can't deal with some words prefix or suffix correctly.
 
+- #### Mismarked English Words
 
-2.**Mismarked English Words**
 In today's world, with the deepening communication between countries, loanwords(especially English loanwords) appear in various languages. words like "and", "Poor" belongs to this type, they are not standard Spanish words, but researchers in Red Hen Lab want to treat them as correct words in practice.
 
+- #### Special Entities
 
-3.**Special Entities**
 Dictionary based spell checkers can not deal with special entities like people's name and locations so well. It's hard to avoid because you can't put all these entities into the dictionary, and you can't distinguish it by following lexical rules. Otherwise, if you try to do it, you will have a huge dictionary which makes spell cheking slower. "Tokio" and "Moscú" are apparently locations, and Yan is people's name.
 
 
@@ -93,11 +87,15 @@ Dictionary based spell checkers can not deal with special entities like people's
 
 I tried different methods to solve three problems above, here is the final solutions.
 
-1.**Wrong Predictions**
+
+- #### Wrong Predictions
+
 As I said before, the quality of used dictionary will effect the performance of Hunspell. Spanish is used in many countries, so it has actually multiple spanish dictionaries in Hunspell. Red Hen Lab focuses on files from Spain and Mexico, I frist combine the original Spanish and Mexico Spanish dictionaries and their affix files together. Then I cooperated with mentors, add some extra affix rules to the current affix files. With those two steps, the appearence of wrong predictions decrease dramaticlly.
 
-2.**Mismarked English Words**. 
+- #### Mismarked English Words
+
 This problems is easy to solve, after comparing two methods, I add one English Hunspell checker after the original Spanish Hunspell. The Spanish Hunspell checker will check all words, but the English one is only triggered when a word is adjusted as wrong in Spanish, so it won't take much longer processing time than before.
 
-3.**Special Entities**
+- #### Special Entities
+
 All sentences will go through one small NER model before Hunspell, person (PER), organization (ORG), location (LOC), and miscellaneous (MISC) will be removed won't be fed into the spell checker. The NER model here needs only CPU with the processing ability of 160 sentences/second. It's not suitable for super large files, but it works for the daily jobs in Red Hen Lab.
