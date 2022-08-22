@@ -4,7 +4,7 @@ title:      "Spell Checker 1: Demand Analysis"
 subtitle:   "An brief overview about spell checker"
 date:       2022-06-21
 author:     "Qing"
-header-img: "img/gsoc_logo.png"
+header-img: "img/gsoc.png"
 tags:
     - GSOC22
     - Spell Checker
