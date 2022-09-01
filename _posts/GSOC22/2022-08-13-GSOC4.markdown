@@ -1,0 +1,48 @@
+---
+layout:     post
+title:      "Spell Checker 4: Python Implementation"
+subtitle:   "Merge all componentes into Python"
+date:       2022-08-13
+author:     "Qing"
+header-img: "img/gsoc.png"
+tags:
+    - GSOC22
+    - Spell Checker
+---
+
+
+
+## Catagory
+
+1. [Introduction](#introduction)
+2. [Hunspell's Python Implementation](#implementation)
+3. [Cospell](#cospell)
+4. [Summary](#summary)
+
+---
+
+## Introduction
+
+I have found a good NER model and extended the dictionary on demand. They are all finished by using python. In this article, I will introduce how to implement python files that combine all these functions.
+
+
+
+## Hunspell's Python Implementation
+
+I planned to use the original [hunspell python package](https://pypi.org/project/hunspell/) at first, but this project stop all updates in 2017, which makes the project unstable to use. Then I want to implement a simple spell checker by using [Norvig's method](https://norvig.com/spell-correct.html) because Hunspell is also implemented with the help of it.  But later I found another well-re-implemented Hunspell version in python that is called [Spylls](https://github.com/zverok/spylls). This project implements two main features of Hinspell: lookup (whether a word is in the dictionary) and suggest (for misspelled words).
+ 
+This implementation uses Norvig's insert-delete-swap-replace method, n-gram method, and phonetic method to correct the word. The detailed explanation can be found in [author's blog](https://zverok.space/blog/).
+
+In view of performance, it is a little slower than the C++ version which was used in Red Hen Lab. On the author's laptop ThinkPad Edge E330 with i5-3210M CPU and 8 GiB of RAM: Dictionary reading for en_US takes around 1.2s. The lookup takes microseconds. Suggest takes ~0.05s in a good case, and up to 0.5s in a bad one (n-gram suggest, which includes the whole dictionary iteration).
+
+
+## Cospell
+
+I named the new python files as cospell, which means that it is a spell checker which combines several functions.
+
+When a sentence is fed in, cospell will first check if it includes symbols 'CCO', 'CC1', which indicates if this sentence belongs to the contents extracted by CCExtractor. Then the whole sentence will be checked by NER function, all special entities will be masked out. The rest words will go through Spanish checker and English checker, if it is neither Spanish nor English, the three methods that were mentioned above will be used to correct it.
+
+
+
+## Summary
+The whole process is 2-3 times slower than the original Hunspell version in Red Hen Lab, because it uses both Spanish and English spell checker if necessary. Except for this disadvantage, the cospell can remove 85% of wrong corrected words than the original Hunspell. For the test dataset, it removes 97% of wrong corrected words.

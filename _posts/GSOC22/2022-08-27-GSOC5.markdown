@@ -1,0 +1,54 @@
+---
+layout:     post
+title:      "Grammar Checker"
+subtitle:   "Introduce how to "
+date:       2022-08-27
+author:     "Qing"
+header-img: "img/gsoc.png"
+tags:
+    - GSOC22
+    - Grammar Checker
+---
+
+If you want to get a brief knowledge about all related information of GEC (Grammatical Error Correction), you can look at this [github repository](https://github.com/gotutiyan/GEC-Info). I also want to find some better methods by reading this page later.
+
+## Catagory
+
+1. [Datasets](#datasets)
+2. [Model Choice](#model)
+3. [Combine Dictionaries](#combine-dictionaries)
+4. [Extend Dictionary](#extend-dictionary)
+5. [Summary](#summary)
+
+---
+
+## Datasets
+
+The current GEC problem is a downstream task, which means that we need to find enough labeled data to train it. However, there are almost no labeled GEC datasets for Spanish. We can only get limited labeled datasets from [COWS-L2H](https://github.com/ucdaviscl/cowsl2h) and [cLang8 ](https://github.com/google-research-datasets/clang8). Both are acquired from L2 Spanish learners. I chose 6,000 sentences from cows-l2h for training. For my task, the texts are written by professional journalists. These two different domains and too limited labeled datasets make the performance no good enough.
+
+## Model Choice
+
+There are many different methods for GEC. One alternative choice is to treat this task as a text-to-text translation task, which means that one Spanish sentence is put in, and the model will translate it into another Spanish sentence, if both sentences are the same, the input is right, otherwise, the input is wrong, and the output is the corrected sentence.
+
+[T5](https://huggingface.co/t5-base) is a good NLP model to solve this problem. However, some papers have improved that the multilingual model can get a better performance in the downstream task, so I chose [mT5](https://huggingface.co/google/mt5-base), the multilingual version of T5 at the end.
+
+The mT5 model should be first finetuned with some Spanish news corpus to improve the model's performance on newspapers. [This model](https://huggingface.co/eslamxm/mt5-base-finetuned-Spanish) has done it before by using corpus from [wiki_lingual](https://huggingface.co/doc2query/msmarco-spanish-mt5-base-v1). So I chose it for the downstream GEC task.
+
+## Results
+
+The final mT5 model doesn't perform good, it can only reaches the F_0.5 score of 25%. One big problem is that it will translate one correct sentence into anoter correct sentence, which is quiet similar as the original spell checker. On the other hand, it can only correct some small mistakes like singular/plural problems and definite article problems. These are common beginners' level mistakes, but they don't often appear in Red Hen Lab's daily corpus.
+
+
+
+## Future works
+
+The problems above can't be solved easily. I will try some other methods after GSOC22 ends. 
+
+#### Method 1
+I will try to get more labeled datasets from Red Hen Lab, and try to find some GEC methods that will generate labeled data from the right sentences, this method was already researched in English, I will try to transfer it into Spanish. It isn't easy because these 2 languages have different grammatical rules.
+
+#### Method 2
+I will try [GECToR](https://github.com/grammarly/gector) and some related methods. These methods are published on Grammarly's GitHub page, personally, I think Grammarly performs well in English writing, so maybe these projects will help in building a good Spanish grammar checker.
+
+#### Method 3
+After trying the Method 1 and Method 2. Maybe I will try to combine several methods together, maybe some simple combination can lead to better performance.

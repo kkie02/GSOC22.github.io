@@ -1,0 +1,125 @@
+---
+layout:     post
+title:      "Spell Checker 3: Expand Hunspell"
+subtitle:   "Extend current Hunspell to get better performance"
+date:       2022-07-26
+author:     "Qing"
+header-img: "img/gsoc.png"
+tags:
+    - GSOC22
+    - Spell Checker
+---
+
+
+
+## Catagory
+
+1. [Recap](#recap)
+2. [Hunspell dictionaries](#hunspell-dictionaries)
+3. [Combine Dictionaries](#combine-dictionaries)
+4. [Extend Dictionary](#extend-dictionary)
+5. [Summary](#summary)
+
+---
+
+## Recap
+
+In the past 2 weeks, I found a good NER model for the project. By this way, many special entities like "Tokio", "Christine" is not be treated as wrong words any more. However, other wrong predictions like "decirlo", "poquillo" are still not corrected. Most of them are caused by missing suffix or prefix. For example, "decir" means "say" in spanish, it can also be found in the dictionary, but in Spanish, "decirlo", which means "say it", is another possible word which consists of stem "decir" and suffix "lo", it can not be found in the dictionary. This article is aimed to fix this problem.
+
+
+## Hunspell dictionaries
+
+After installing Hunspell, it can be easily used by:
+> hunspell -d es_ES filename.txt
+
+es_ES is the name of the dictionary, each dictionary consists of one .dic file and one .aff file. Dic file contains all stems and their possible affixes, they are separated by "/". Possible affixes is not necessary for each word. Aff file define the exact affix entry. Each affix entry has such a format:
+> [type] [flag] [letters to remove] [letters to add] [condition]
+
+The **type** option contain a lot of optional attributes. For example, **SET** is used for setting the character encodings of affixes and dictionary files. **TRY** sets the change characters for suggestions. **REP** sets a replacement table for multiple character corrections in suggestion mode. **PFX** and **SFX** defines prefix and suffix classes named with affix flags. The **flag** option is the name of affix flags used at the end of each word in .dic file. **Letters to remove/add** means which letters should be removed/added at the beginning or end of the word depending on **type**. Each affix entry may contain many different rules, so the new word is only valid when **condition** is met.
+
+For example, there is a word "chavista/c" in .dic file, and the corresponding entry in .aff file is listed below:
+```js
+PFX c Y 2
+PFX c 0 anti [^r]
+PFX c 0 antir r
+```
+The first line means this entry is an prefix entry with affix flag c, it contains two exact rules. Capital Y is the symbol of entry's header.
+First prefix "anti" can be added to a word if the first character of the word isn't 'r'. Second prefix "antir" can be added to the words begin with an 'r'. At last, "chavista/c" generates 2 valid words "chavista" and "antichavista" in Hunspell.
+
+#### Combine Dictionaries
+
+According to wikipeida, Spanish is a global language with nearly 500 million native speakers, mainly in the Americas and Spain. It is also the official language of 20 countries. LibreOffice offers dictionaries for Hunspell in different languages. [Here](https://cgit.freedesktop.org/libreoffice/dictionaries/tree/es) you can find 23 Spanish dicrionaries for different countries. After comparision, all these dicrionaries have almost the same affix entries, so I choose the .aff file used in Red Hen Lab as the general one. The CCExtractor files with which we are working come from Mexican and Spanish (from Spain) tv, so I only combine the dictionaries of Red Hen Lab's original one, es_MX and es_ES. After combination, lines of the dictionary increase from 68789 to 70230. From the view of vocabulary, far more than 2000 words are added.
+
+
+#### Extend Dictionary
+
+Combine dictionaries looks simple, but it increases the performance of Hunspell dramatically. Many words that only used in Mexico will not be treated as wrong. However, this can not solve all problems. There are still some words missing. In this section, I process almost all Spanish CCExtractor files in Red Hen Lab, and extract wrods that have specific suffixes or prefixes. I gave the generated file to my mentor, she extract 57 important right words, I add these words manual to the dictionary. I put all new words at the end of the dic file, if you don't like them, you can simply delete them. Here is the rules:
+```js
+Prefixes:
+anti: word/c
+re: word/p
+co,con: word/v
+pre: word/n
+ex: word/w
+contra/contrar: word/v
+Suffixes:
+do/dos: word/D
+era/ese: word/R
+le/les(simple): word/Â
+le/les(complex): word/Î
+la/lo/las/los(simple): word/ẑ
+la/las/lo/los/dla/dlas/dlo/dlos(complex): word/Ì
+```
+Some Suffixes have multiple choices, so I give the choice of simple and complex versions for them. Simple takes entry with minimum number of rules, and don't need to remove the last several words. Complex takes entry with the highest number of rules, and in the most case, some words need to be removed. For example, regresar/ẑ represent words regresar and regresarla, regresarlo, regresarla and regresarlos. But regresar/Ì represents words regresala, regresalo... Following table shows 4 entries which includes la/lo:
+```js
+SFX ẑ Y 4
+SFX ẑ 0 la .
+SFX ẑ 0 lo .
+SFX ẑ 0 las .
+SFX ẑ 0 los .
+
+SFX Ì Y 388
+...
+SFX Ì abar ábalo abar
+SFX Ì abar ábalos abar
+SFX Ì r la r
+SFX Ì r las r
+SFX Ì r lo r
+SFX Ì r los r
+SFX Ì r dla r
+SFX Ì r dlas r
+SFX Ì r dlo r
+SFX Ì r dlos r
+...
+SFX Ð Y 60
+...
+SFX Ð egar iégalo egar
+SFX Ð egar iégalos egar
+SFX Ð r la r
+SFX Ð r las r
+SFX Ð r lo r
+SFX Ð r los r
+SFX Ð r dla r
+SFX Ð r dlas r
+...
+SFX Ô Y 64
+...
+SFX Ô aer áelo aer
+SFX Ô aer áelos aer
+SFX Ô r la r
+SFX Ô r las r
+SFX Ô r lo r
+SFX Ô r los r
+SFX Ô r dla r
+SFX Ô r dlas r
+SFX Ô r dlo r
+SFX Ô r dlos r?
+SFX Ô eír íela eír
+SFX Ô eír íelas eír
+...
+```
+
+
+
+## Summary
+Hunspell is widely used for many different languages, and Spanish is one of the most important language in the world. However, the quality of Hunspell dictionry seems not too high. In this chapter, I used some simple method like combine dictionary and extend dictionary to get a better dictionary which suits for daily life of Red Hen Lab.
