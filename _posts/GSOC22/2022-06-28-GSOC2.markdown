@@ -47,7 +47,7 @@ A traditional method to do NER is to use LSTM or Bi-LSTM as the feature extracto
 
 CRF(Conditional Random Fields) is a probabilistic undirected discriminative model, which solves the limited dependency problem of HMM (hidden Markov) models in sequence tagging. In HMM, the hidden state y<sub>i</sub> is only affected by y<sub>i-1</sub>, thus output x<sub>i</sub> is affected by y<sub>i</sub>. In CRF, x<sub>i</sub> can be affected by contextual information {...y<sub>i-1</sub>,y<sub>i</sub>,y<sub>i+1</sub>...} depending on feature functions. It is suitable for task like NER where contextual states(words) affect the current prediction. 
 
-<img class="shadow" src="/img/in-post/LSTM-CRF.png" width="260">
+#<img class="shadow" src="/img/in-post/LSTM-CRF.png" width="260">
 #<div class="visible-md visible-lg">
     #<img src="img/in-post/LSTM-CRF.png" width="350" />
     #<small class="img-hint">Structure of Bi-LSTM-CRF model</small>
