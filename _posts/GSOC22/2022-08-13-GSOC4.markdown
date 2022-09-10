@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Spell Checker 4: Python Implementation"
-subtitle:   "Merge all componentes into Python"
+subtitle:   "Merge all components into Python"
 date:       2022-08-13
 author:     "Qing"
 header-img: "img/gsoc.png"
@@ -12,7 +12,7 @@ tags:
 
 
 
-## Catagory
+## Index
 
 1. [Introduction](#introduction)
 2. [Hunspell's Python Implementation](#implementation)
@@ -29,7 +29,7 @@ I have found a good NER model and extended the dictionary on demand. They are al
 
 ## Hunspell's Python Implementation
 
-I planned to use the original [hunspell python package](https://pypi.org/project/hunspell/) at first, but this project stop all updates in 2017, which makes the project unstable to use. Then I want to implement a simple spell checker by using [Norvig's method](https://norvig.com/spell-correct.html) because Hunspell is also implemented with the help of it.  But later I found another well-re-implemented Hunspell version in python that is called [Spylls](https://github.com/zverok/spylls). This project implements two main features of Hinspell: lookup (whether a word is in the dictionary) and suggest (for misspelled words).
+I planned to use the original [hunspell python package](https://pypi.org/project/hunspell/) at first, but this package stopped all updates in 2017, which makes it unstable to use. Then I want to implement a simple spell checker by using [Norvig's method](https://norvig.com/spell-correct.html) because Hunspell is also implemented with the help of it.  But later I found another well-re-implemented Hunspell version in python that is called [Spylls](https://github.com/zverok/spylls). This project implements two main features of Hunspell: lookup (whether a word is in the dictionary) and suggest (for misspelled words).
  
 This implementation uses Norvig's insert-delete-swap-replace method, n-gram method, and phonetic method to correct the word. The detailed explanation can be found in [author's blog](https://zverok.space/blog/).
 
@@ -40,9 +40,9 @@ In view of performance, it is a little slower than the C++ version which was use
 
 I named the new python files as cospell, which means that it is a spell checker which combines several functions.
 
-When a sentence is fed in, cospell will first check if it includes symbols 'CCO', 'CC1', which indicates if this sentence belongs to the contents extracted by CCExtractor. Then the whole sentence will be checked by NER function, all special entities will be masked out. The rest words will go through Spanish checker and English checker, if it is neither Spanish nor English, the three methods that were mentioned above will be used to correct it.
+When a sentence is fed in, cospell will first check if it includes symbols 'CCO', 'CC1', which indicates if this sentence belongs to the contents extracted by CCExtractor. Then the whole sentence will be checked by NER function, all special entities will be masked out. The rest of words will go through Spanish checker and English checker, if it is not recognized as a right Spanish or English word, the three methods that were mentioned above will be used to correct it.
 
 
 
 ## Summary
-The whole process is 2-3 times slower than the original Hunspell version in Red Hen Lab, because it uses both Spanish and English spell checker if necessary. Except for this disadvantage, the cospell can remove 85% of wrong corrected words than the original Hunspell. For the test dataset, it removes 97% of wrong corrected words.
+The whole process is 2-3 times slower than the original Hunspell version in Red Hen Lab, because it uses both Spanish and English spell checkers if necessary. Except for this disadvantage, cospell can remove 85% of wrong corrected words than the original Hunspell. For example, the original Hunspell will generate a list of 120 words as output, 100 of them are actually right, the 20 words left are real wrong words. By using cospell, it will only give back a list of 35 words on average, of those, only 15 words are right words treated as wrong (compared to the 100 of the original Hunspell)  and the rest 20 are correctly identified wrong words. This performance can also be improved in the future (and we plan to do it) by running Cospell in more CCExtractor files used by the Red Hen Lab and adding the right words included in the output file to the dictionary. I did it for the test dataset, thus in the test dataset, it removes 97% of wrong corrected words.

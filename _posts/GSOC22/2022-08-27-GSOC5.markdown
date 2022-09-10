@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Grammar Checker"
-subtitle:   "Introduce how to "
+subtitle:   "Small test about building grammar checker "
 date:       2022-08-27
 author:     "Qing"
 header-img: "img/gsoc.png"
@@ -12,13 +12,12 @@ tags:
 
 If you want to get a brief knowledge about all related information of GEC (Grammatical Error Correction), you can look at this [github repository](https://github.com/gotutiyan/GEC-Info). I also want to find some better methods by reading this page later.
 
-## Catagory
+## Index
 
 1. [Datasets](#datasets)
 2. [Model Choice](#model)
-3. [Combine Dictionaries](#combine-dictionaries)
-4. [Extend Dictionary](#extend-dictionary)
-5. [Summary](#summary)
+3. [Results](#results)
+4. [Future Works](#future-works)
 
 ---
 

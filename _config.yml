@@ -2,7 +2,7 @@
 title: Qing's Blog
 #SEOTitle: 你的博客 | Your Blog
 SEOTitle: Qing Blog
-header-img: /img/home-bg.jpg
+header-img: img/gsoc.png
 email: gitkomo@protonmail.com
 description: ""
 keyword: ""
@@ -67,8 +67,9 @@ kramdown:
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "Record some projects"
-sidebar-avatar: /img/background2.png      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-about-description: "My name is Qing. I am researching multilingual lanuguage model on Germany. Here is the github [link](https://github.com/kkie02/GSOC22_Tools-for-improving-subtitle-caption-quality) of my GSOC project 2022.
+"
+sidebar-avatar: img/avatar.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
