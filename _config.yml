@@ -67,8 +67,7 @@ kramdown:
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "My name is Qing. I am researching multilingual lanuguage model on Germany. Here is the github [link](https://github.com/kkie02/GSOC22_Tools-for-improving-subtitle-caption-quality) of my GSOC project 2022.
-"
+sidebar-about-description: "My name is Qing. I am researching on topic about multilingual lanuguage model in German. For this GSOC project 2022, I am foucusing on building a better spell checker for Red Hen Lab."
 sidebar-avatar: img/avatar.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
